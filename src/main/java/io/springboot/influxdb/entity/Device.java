@@ -3,6 +3,7 @@ package io.springboot.influxdb.entity;
 import lombok.Data;
 import org.influxdb.annotation.Column;
 import org.influxdb.annotation.Measurement;
+import plus.ojbk.influxdb.annotation.Count;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Device {
     /**
      * 数据值
      */
+    @Count("value")
     @Column(name="value")
     private BigDecimal value;
     /**

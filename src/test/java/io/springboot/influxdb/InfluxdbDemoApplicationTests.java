@@ -13,6 +13,7 @@ import plus.ojbk.influxdb.core.Order;
 import plus.ojbk.influxdb.core.Query;
 import plus.ojbk.influxdb.core.model.DeleteModel;
 import plus.ojbk.influxdb.core.model.QueryModel;
+import plus.ojbk.influxdb.util.InfluxdbUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,14 +28,14 @@ class InfluxdbDemoApplicationTests {
     @Autowired
     private InfluxdbTemplate influxdbTemplate;
 
-    private String measurement = "device";
+   // private String measurement = "device";
     @Test
     void getCount() {
         QueryModel countModel = new QueryModel();
-        countModel.setMeasurement(measurement);
+        countModel.setMeasurement(InfluxdbUtils.getMeasurement(Device.class));
         countModel.setStart(LocalDateTime.now().plusHours(-2L));
         countModel.setEnd(LocalDateTime.now());
-        countModel.setSelect(Query.count("voltage"));  //只能count field字段
+        countModel.setSelect(Query.count(InfluxdbUtils.getCountField(Device.class)));  //只能count field字段
         countModel.setWhere(Op.where(countModel));
         //获得总条数
         long count = influxdbTemplate.count(Query.build(countModel));
@@ -46,7 +47,7 @@ class InfluxdbDemoApplicationTests {
         QueryModel model = new QueryModel();
         model.setCurrent(1L);
         model.setSize(10L);
-        model.setMeasurement(measurement);
+        model.setMeasurement(InfluxdbUtils.getMeasurement(Device.class));
         model.setStart(LocalDateTime.now().plusHours(-2L));
         model.setEnd(LocalDateTime.now());
         model.setUseTimeZone(true);  //时区
@@ -79,7 +80,7 @@ class InfluxdbDemoApplicationTests {
         model.setMap(map);
         //model.setStart(LocalDateTime.now().plusHours(-10L));
         //model.setEnd(LocalDateTime.now());
-        model.setMeasurement(measurement);
+        model.setMeasurement(InfluxdbUtils.getMeasurement(Device.class));
         model.setWhere(Op.where(model));
         influxdbTemplate.delete(Delete.build(model));
     }
